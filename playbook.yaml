@@ -1,0 +1,15 @@
+---
+- name: Build packages
+  hosts: localhost
+  connection: local
+  vars:
+    ansible_user: "centos"
+  roles:
+    - role: cloudnull.ansible_tripleo_sdk
+      tripleo_sdk_developer_patches:
+        - url: "https://review.opendev.org/openstack/tripleo-common"
+          refs: "refs/changes/27/753427/18"
+          version: FETCH_HEAD
+        - url: "https://review.opendev.org/openstack/python-tripleoclient"
+          refs: "refs/changes/68/757868/8"
+          version: FETCH_HEAD

@@ -1,0 +1,10 @@
+---
+parameter_defaults:
+  DnfStreams: []
+  UpgradeInitCommand: |-
+    set -ev
+    sudo curl -L -o /etc/yum.repos.d/CentOS-Linux-BaseOS.repo https://gist.githubusercontent.com/cloudnull/3db5385e3d0fd373be81d9b8f156b67c/raw/a614daedacf6c55b00b248654a28450cc4273295/gistfile1.txt
+    sudo curl -L -o /etc/yum.repos.d/delorean.repo https://trunk.rdoproject.org/centos8/current/delorean.repo
+    sudo dnf install -y 'python*tripleo-repos'
+    sudo tripleo-repos -b master current-tripleo
+    sudo dnf clean all

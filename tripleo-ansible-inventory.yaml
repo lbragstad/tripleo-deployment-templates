@@ -1,0 +1,550 @@
+Undercloud:
+  hosts:
+    undercloud: {}
+  vars:
+    ansible_connection: ssh
+    ansible_host: localhost
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_remote_tmp: /tmp/ansible-${USER}
+    ansible_ssh_private_key_file: /home/centos/.ssh/id_rsa_tripleo
+    ansible_ssh_user: tripleo-admin
+    auth_url: http://192.168.4.101:5000
+    overcloud_admin_password: REaqggXMFlZdp3KGCE9vb1X4Y
+    overcloud_horizon_url: http://172.16.4.14:80/dashboard
+    overcloud_keystone_url: http://172.16.4.14:5000
+    plan: rk-openstack-0
+    plans:
+    - rk-openstack-0
+    project_name: admin
+    undercloud_service_list:
+    - tripleo_nova_compute
+    - tripleo_heat_engine
+    - tripleo_ironic_conductor
+    - tripleo_swift_container_server
+    - tripleo_swift_object_server
+    - tripleo_mistral_engine
+    username: admin
+Controller:
+  children:
+    rk-openstack-0_Controller: {}
+rk-openstack-0_Controller:
+  hosts:
+    rk-openstack-0-controller-0:
+      ansible_host: 192.168.7.243
+      canonical_hostname: rk-openstack-0-controller-0.localdomain
+      ctlplane_hostname: rk-openstack-0-controller-0.ctlplane.localdomain
+      ctlplane_ip: 192.168.7.243
+      deploy_server_id: e2193990-2b9b-4ef3-91a6-84efbd047e24
+      external_hostname: rk-openstack-0-controller-0.external.localdomain
+      external_ip: 172.16.4.86
+      internal_api_hostname: rk-openstack-0-controller-0.internalapi.localdomain
+      internal_api_ip: 172.16.3.207
+      storage_hostname: rk-openstack-0-controller-0.storage.localdomain
+      storage_ip: 172.16.1.11
+      storage_mgmt_hostname: rk-openstack-0-controller-0.storagemgmt.localdomain
+      storage_mgmt_ip: 172.16.2.166
+      tenant_hostname: rk-openstack-0-controller-0.tenant.localdomain
+      tenant_ip: 172.16.0.144
+  vars:
+    ansible_ssh_user: tripleo-admin
+    bootstrap_server_id: e2193990-2b9b-4ef3-91a6-84efbd047e24
+    serial: '1'
+    tripleo_role_name: Controller
+    tripleo_role_networks:
+    - ctlplane
+    - external
+    - internal_api
+    - storage
+    - storage_mgmt
+    - tenant
+Compute:
+  children:
+    rk-openstack-0_Compute: {}
+rk-openstack-0_Compute:
+  hosts:
+    rk-openstack-0-novacompute-0:
+      ansible_host: 192.168.7.217
+      canonical_hostname: rk-openstack-0-novacompute-0.localdomain
+      ctlplane_hostname: rk-openstack-0-novacompute-0.ctlplane.localdomain
+      ctlplane_ip: 192.168.7.217
+      deploy_server_id: 1134a3ed-9a78-4038-8c1d-55118b19e6a5
+      internal_api_hostname: rk-openstack-0-novacompute-0.internalapi.localdomain
+      internal_api_ip: 172.16.3.27
+      storage_hostname: rk-openstack-0-novacompute-0.storage.localdomain
+      storage_ip: 172.16.1.90
+      tenant_hostname: rk-openstack-0-novacompute-0.tenant.localdomain
+      tenant_ip: 172.16.0.182
+  vars:
+    ansible_ssh_user: tripleo-admin
+    bootstrap_server_id: e2193990-2b9b-4ef3-91a6-84efbd047e24
+    serial: '1'
+    tripleo_role_name: Compute
+    tripleo_role_networks:
+    - ctlplane
+    - internal_api
+    - storage
+    - tenant
+allovercloud:
+  children:
+    rk-openstack-0_allovercloud: {}
+rk-openstack-0_allovercloud:
+  children:
+    rk-openstack-0_Compute: {}
+    rk-openstack-0_Controller: {}
+  vars:
+    container_cli: podman
+    ctlplane_vip: 192.168.7.227
+    external_vip: 172.16.4.14
+    internal_api_vip: 172.16.3.197
+    redis_vip: 172.16.3.152
+    storage_mgmt_vip: 172.16.2.10
+    storage_vip: 172.16.1.169
+rk-openstack-0:
+  children:
+    rk-openstack-0_allovercloud: {}
+rk-openstack-0_rk-openstack-0:
+  children:
+    rk-openstack-0_allovercloud: {}
+rk-openstack-0_overcloud:
+  children:
+    rk-openstack-0_allovercloud: {}
+swift_storage:
+  children:
+    rk-openstack-0_swift_storage: {}
+rk-openstack-0_swift_storage:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+mysql:
+  children:
+    rk-openstack-0_mysql: {}
+rk-openstack-0_mysql:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+heat_api:
+  children:
+    rk-openstack-0_heat_api: {}
+rk-openstack-0_heat_api:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+heat_api_cfn:
+  children:
+    rk-openstack-0_heat_api_cfn: {}
+rk-openstack-0_heat_api_cfn:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+placement:
+  children:
+    rk-openstack-0_placement: {}
+rk-openstack-0_placement:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+mysql_client:
+  children:
+    rk-openstack-0_mysql_client: {}
+rk-openstack-0_mysql_client:
+  children:
+    rk-openstack-0_Compute: {}
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+container_image_prepare:
+  children:
+    rk-openstack-0_container_image_prepare: {}
+rk-openstack-0_container_image_prepare:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+nova_metadata:
+  children:
+    rk-openstack-0_nova_metadata: {}
+rk-openstack-0_nova_metadata:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+heat_engine:
+  children:
+    rk-openstack-0_heat_engine: {}
+rk-openstack-0_heat_engine:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+swift_ringbuilder:
+  children:
+    rk-openstack-0_swift_ringbuilder: {}
+rk-openstack-0_swift_ringbuilder:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+certmonger_user:
+  children:
+    rk-openstack-0_certmonger_user: {}
+rk-openstack-0_certmonger_user:
+  children:
+    rk-openstack-0_Compute: {}
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+sshd:
+  children:
+    rk-openstack-0_sshd: {}
+rk-openstack-0_sshd:
+  children:
+    rk-openstack-0_Compute: {}
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+clustercheck:
+  children:
+    rk-openstack-0_clustercheck: {}
+rk-openstack-0_clustercheck:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+nova_conductor:
+  children:
+    rk-openstack-0_nova_conductor: {}
+rk-openstack-0_nova_conductor:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+timezone:
+  children:
+    rk-openstack-0_timezone: {}
+rk-openstack-0_timezone:
+  children:
+    rk-openstack-0_Compute: {}
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+pacemaker:
+  children:
+    rk-openstack-0_pacemaker: {}
+rk-openstack-0_pacemaker:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+tripleo_firewall:
+  children:
+    rk-openstack-0_tripleo_firewall: {}
+rk-openstack-0_tripleo_firewall:
+  children:
+    rk-openstack-0_Compute: {}
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+chrony:
+  children:
+    rk-openstack-0_chrony: {}
+rk-openstack-0_chrony:
+  children:
+    rk-openstack-0_Compute: {}
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+keystone_public_api:
+  children:
+    rk-openstack-0_keystone_public_api: {}
+rk-openstack-0_keystone_public_api:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+nova_migration_target:
+  children:
+    rk-openstack-0_nova_migration_target: {}
+rk-openstack-0_nova_migration_target:
+  children:
+    rk-openstack-0_Compute: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+glance_api:
+  children:
+    rk-openstack-0_glance_api: {}
+rk-openstack-0_glance_api:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+nova_scheduler:
+  children:
+    rk-openstack-0_nova_scheduler: {}
+rk-openstack-0_nova_scheduler:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+memcached:
+  children:
+    rk-openstack-0_memcached: {}
+rk-openstack-0_memcached:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+iscsid:
+  children:
+    rk-openstack-0_iscsid: {}
+rk-openstack-0_iscsid:
+  children:
+    rk-openstack-0_Compute: {}
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+keystone_admin_api:
+  children:
+    rk-openstack-0_keystone_admin_api: {}
+rk-openstack-0_keystone_admin_api:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+ovn_controller:
+  children:
+    rk-openstack-0_ovn_controller: {}
+rk-openstack-0_ovn_controller:
+  children:
+    rk-openstack-0_Compute: {}
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+nova_libvirt:
+  children:
+    rk-openstack-0_nova_libvirt: {}
+rk-openstack-0_nova_libvirt:
+  children:
+    rk-openstack-0_Compute: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+podman:
+  children:
+    rk-openstack-0_podman: {}
+rk-openstack-0_podman:
+  children:
+    rk-openstack-0_Compute: {}
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+heat_api_cloudwatch_disabled:
+  children:
+    rk-openstack-0_heat_api_cloudwatch_disabled: {}
+rk-openstack-0_heat_api_cloudwatch_disabled:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+keystone:
+  children:
+    rk-openstack-0_keystone: {}
+rk-openstack-0_keystone:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+nova_vnc_proxy:
+  children:
+    rk-openstack-0_nova_vnc_proxy: {}
+rk-openstack-0_nova_vnc_proxy:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+logrotate_crond:
+  children:
+    rk-openstack-0_logrotate_crond: {}
+rk-openstack-0_logrotate_crond:
+  children:
+    rk-openstack-0_Compute: {}
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+cinder_api:
+  children:
+    rk-openstack-0_cinder_api: {}
+rk-openstack-0_cinder_api:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+cinder_volume:
+  children:
+    rk-openstack-0_cinder_volume: {}
+rk-openstack-0_cinder_volume:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+nova_libvirt_guests:
+  children:
+    rk-openstack-0_nova_libvirt_guests: {}
+rk-openstack-0_nova_libvirt_guests:
+  children:
+    rk-openstack-0_Compute: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+ca_certs:
+  children:
+    rk-openstack-0_ca_certs: {}
+rk-openstack-0_ca_certs:
+  children:
+    rk-openstack-0_Compute: {}
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+boot_params_service:
+  children:
+    rk-openstack-0_boot_params_service: {}
+rk-openstack-0_boot_params_service:
+  children:
+    rk-openstack-0_Compute: {}
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+haproxy:
+  children:
+    rk-openstack-0_haproxy: {}
+rk-openstack-0_haproxy:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+tuned:
+  children:
+    rk-openstack-0_tuned: {}
+rk-openstack-0_tuned:
+  children:
+    rk-openstack-0_Compute: {}
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+neutron_api:
+  children:
+    rk-openstack-0_neutron_api: {}
+rk-openstack-0_neutron_api:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+snmp:
+  children:
+    rk-openstack-0_snmp: {}
+rk-openstack-0_snmp:
+  children:
+    rk-openstack-0_Compute: {}
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+ovn_metadata:
+  children:
+    rk-openstack-0_ovn_metadata: {}
+rk-openstack-0_ovn_metadata:
+  children:
+    rk-openstack-0_Compute: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+tripleo_packages:
+  children:
+    rk-openstack-0_tripleo_packages: {}
+rk-openstack-0_tripleo_packages:
+  children:
+    rk-openstack-0_Compute: {}
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+kernel:
+  children:
+    rk-openstack-0_kernel: {}
+rk-openstack-0_kernel:
+  children:
+    rk-openstack-0_Compute: {}
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+nova_compute:
+  children:
+    rk-openstack-0_nova_compute: {}
+rk-openstack-0_nova_compute:
+  children:
+    rk-openstack-0_Compute: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+horizon:
+  children:
+    rk-openstack-0_horizon: {}
+rk-openstack-0_horizon:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+neutron_plugin_ml2_ovn:
+  children:
+    rk-openstack-0_neutron_plugin_ml2_ovn: {}
+rk-openstack-0_neutron_plugin_ml2_ovn:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+nova_api:
+  children:
+    rk-openstack-0_nova_api: {}
+rk-openstack-0_nova_api:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+ovn_dbs:
+  children:
+    rk-openstack-0_ovn_dbs: {}
+rk-openstack-0_ovn_dbs:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+oslo_messaging_rpc:
+  children:
+    rk-openstack-0_oslo_messaging_rpc: {}
+rk-openstack-0_oslo_messaging_rpc:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+swift_proxy:
+  children:
+    rk-openstack-0_swift_proxy: {}
+rk-openstack-0_swift_proxy:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+oslo_messaging_notify:
+  children:
+    rk-openstack-0_oslo_messaging_notify: {}
+rk-openstack-0_oslo_messaging_notify:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin
+cinder_scheduler:
+  children:
+    rk-openstack-0_cinder_scheduler: {}
+rk-openstack-0_cinder_scheduler:
+  children:
+    rk-openstack-0_Controller: {}
+  vars:
+    ansible_ssh_user: tripleo-admin

@@ -1,0 +1,29 @@
+-   arch: x86_64
+    capabilities: boot_option:local,profile:compute,node:overcloud-novacompute-0
+    cpu: 1
+    disk: 1
+    mac:
+    - 52:54:01:7d:8a:de
+    - 52:54:01:39:be:b0
+    memory: 1
+    name: compute-0
+    pm_addr: 172.16.27.67
+    pm_password: secrete
+    pm_port: 16021
+    pm_type: ipmi
+    pm_user: admin
+
+-   arch: x86_64
+    capabilities: boot_option:local,profile:control,node:overcloud-controller-0
+    cpu: 1
+    disk: 1
+    mac:
+    - 52:54:01:37:63:0b
+    - 52:54:01:82:a2:06
+    memory: 1
+    name: controller-0
+    pm_addr: 172.16.27.67
+    pm_password: secrete
+    pm_port: 16020
+    pm_type: ipmi
+    pm_user: admin
