@@ -1,0 +1,80 @@
+---
+{#
+  Loop through all networks and set the minimum viable MTU. Note that the minimum MTU is selected
+  because the bridge interface will inheret the lowest MTU of all member interfaces.
+#}
+{% set mtu_list = [ctlplane_mtu] %}
+{% for network in role_networks %}
+{%   set _ = mtu_list.append(
+       lookup('vars', networks_lower[network] ~ '_mtu')
+     )
+%}
+{% endfor %}
+{% set min_viable_mtu = mtu_list | min | int %}
+{#
+  Create the primary interface for use with members
+#}
+{% set nic2_members = [
+      {
+        "type": "interface",
+        "name": "nic2",
+        "mtu": min_viable_mtu | int,
+        "primary": true
+      }
+    ]
+%}
+{#
+  Loop through all role networks and create members
+#}
+{% for network in role_networks %}
+{%   set _ = nic2_members.append(
+       {
+         "type": "vlan",
+         "mtu": lookup('vars', networks_lower[network] ~ '_mtu') | int,
+         "vlan_id": lookup('vars', networks_lower[network] ~ '_vlan_id') | int,
+         "addresses": [
+           {
+             "ip_netmask": lookup('vars', networks_lower[network] ~ '_ip') ~ "/" ~ lookup('vars', networks_lower[network] ~ '_cidr')
+           }
+         ],
+         "routes": lookup('vars', networks_lower[network] ~ '_host_routes')
+       }
+     )
+%}
+{% endfor %}
+{#
+  Set the network configuration interfaces
+#}
+{% set network_config_interfaces = [
+    {
+      "type": "interface",
+      "name": "nic1",
+      "mtu": ctlplane_mtu,
+      "dns_servers": ctlplane_dns_nameservers,
+      "domain": dns_search_domains,
+      "routes": ctlplane_host_routes,
+      "use_dhcp": false,
+      "addresses": [
+        {
+          "ip_netmask": ctlplane_ip ~ "/" ~ ctlplane_subnet_cidr
+        }
+      ]
+    },
+    {
+      "type": "ovs_bridge",
+      "name": neutron_physical_bridge_name,
+      "mtu": min_viable_mtu,
+      "use_dhcp": false,
+      "domain": dns_search_domains,
+      "members": nic2_members
+    }
+  ]
+%}
+{#
+  Render the network configuration as nice YAML
+#}
+{% set network_config = {
+     "network_config": network_config_interfaces
+   }
+%}
+{{ network_config | to_nice_yaml }}

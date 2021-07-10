@@ -1,44 +1,75 @@
 ---
 parameter_defaults:
-  NetworkConfigWithAnsible: false
-
-  ContainerCli: podman
+  BlockStorageCount: 0
+  BlockStorageNetworkConfigTemplate: /home/centos/dual-nic-multi-vlan.yaml.j2
+  CellControllerNetworkConfigTemplate: /home/centos/dual-nic-multi-vlan.yaml.j2
+  CephStorageCount: 0
+  CephStorageNetworkConfigTemplate: /home/centos/dual-nic-multi-vlan.yaml.j2
+  CephStorageSchedulerHints:
+    capabilities:node: overcloud-ceph-%index%
+  CinderEnableIscsiBackend: false
+  CinderEnableNfsBackend: true
+  CinderNfsMountOptions: context=system_u:object_r:container_file_t:s0
+  CinderNfsServers: 172.16.27.211:/mnt/storage/openstack/cinder
+  CloudDomain: localdomain
   CloudName: overcloud.localdomain
+  CloudNameCtlplane: overcloud.ctlplane.localdomain
   CloudNameInternal: overcloud.internalapi.localdomain
   CloudNameStorage: overcloud.storage.localdomain
   CloudNameStorageManagement: overcloud.storagemgmt.localdomain
-  CloudNameCtlplane: overcloud.ctlplane.localdomain
-  CloudDomain: localdomain
-
-  ControllerSchedulerHints:
-    'capabilities:node': 'overcloud-controller-%index%'
-  ComputeSchedulerHints:
-    'capabilities:node': 'overcloud-novacompute-%index%'
-  CephStorageSchedulerHints:
-    'capabilities:node': 'overcloud-ceph-%index%'
-
-  ControllerCount: 1
   ComputeCount: 1
-  CephStorageCount: 0
-  BlockStorageCount: 0
+  ComputeDVRNetworkConfigTemplate: /home/centos/dual-nic-multi-vlan.yaml.j2
+  ComputeExtraConfig:
+    nova::compute::libvirt::cpu_mode: host-passthrough
+    nova::compute::libvirt::disk_cachemodes:
+    - file=writeback
+    - block=none
+    - network=writeback
+    nova::compute::libvirt::force_raw_images: true
+    nova::compute::libvirt::hw_machine_type:
+    - x86_64=q35
+    nova::compute::libvirt::images_type: raw
+    nova::compute::libvirt::preallocate_images: space
+    nova::compute::libvirt::use_cow_images: true
+  ComputeNetworkConfigTemplate: /home/centos/dual-nic-multi-vlan.yaml.j2
+  ComputeParameters:
+    KernelArgs: default_hugepagesz=1GB hugepagesz=1GB hugepages=4 amd_iommu=on iommu=pt
+      kvm_amd.npt=1 kvm.ignore_msrs=1
+  ComputeSchedulerHints:
+    capabilities:node: overcloud-novacompute-%index%
+  ContainerCli: podman
+  ContainerImagePrepare:
+  - excludes:
+    - ceph
+    - prometheus
+    push_destination: 192.168.4.101:8787
+    set:
+      name_prefix: openstack
+      name_suffix: ''
+      namespace: docker.io/tripleomaster
+      rhel_containers: 'false'
+      tag: current-tripleo-rdo
+  ControlPlaneDefaultRoute: 192.168.4.101
+  ControllerCount: 1
+  ControllerNetworkConfigTemplate: /home/centos/dual-nic-multi-vlan.yaml.j2
+  ControllerSchedulerHints:
+    capabilities:node: overcloud-controller-%index%
+  DnsServers:
+  - 172.16.4.1
+  - 208.67.222.222
+  EnablePackageInstall: true
+  GlanceCacheEnabled: true
+  GlanceEnabledImportMethods: web-download,glance-direct
+  GlanceNfsShare: 172.16.27.211:/mnt/storage/openstack/glance
+  GlanceStagingNfsShare: 172.16.27.211:/mnt/storage/openstack/glance-staging
   ObjectStorageCount: 0
-
-  OvercloudControlFlavor: baremetal
-  OvercloudComputeFlavor: baremetal
-  OvercloudCephStorageFlavor: baremetal
-  OvercloudBlockStorageFlavor: baremetal
-  OvercloudSwiftStorageFlavor: baremetal
-
-  SELinuxMode: permissive
-
+  ObjectStorageNetworkConfigTemplate: /home/centos/dual-nic-multi-vlan.yaml.j2
   OctaviaTimeoutClientData: 1200000
   OctaviaTimeoutMemberData: 1200000
-
-  ControlPlaneDefaultRoute: 192.168.4.101
-
-  TenantNetworkVlanID: 200
-  StorageNetworkVlanID: 201
-  StorageMgmtNetworkVlanID: 202
-  InternalApiNetworkVlanID: 203
-  ExternalNetworkVlanID: 204
-
+  OvercloudBlockStorageFlavor: baremetal
+  OvercloudCephStorageFlavor: baremetal
+  OvercloudComputeFlavor: baremetal
+  OvercloudControlFlavor: baremetal
+  OvercloudSwiftStorageFlavor: baremetal
+  SELinuxMode: permissive
+  StandaloneNetworkConfigTemplate: /home/centos/dual-nic-multi-vlan.yaml.j2
