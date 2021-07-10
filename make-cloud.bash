@@ -334,19 +334,15 @@ function deploy-overcloud {
                                                    --environment-file ${HOME}/overcloud-networks-deplopyed.yaml \
                                                    --environment-file ${HOME}/overcloud-vip-deployed.yaml \
                                                    --environment-file ${HOME}/parameters.yaml \
-                                                   --networks-file ${HOME}/net-data.yaml \
                                                    --roles-file ${HOME}/overcloud-roles-data.yaml \
-                                                   --vip-file ${HOME}/network-vips.yaml \
-                                                   --baremetal-deployment ${HOME}/overcloud-baremetal-config.yaml \
                                                    --config-download-timeout 1024 \
                                                    --timeout 1024 \
-                                                   --deployed-server \
-                                                   --network-config \
                                                    --disable-validations \
                                                    --validation-errors-nonfatal \
                                                    --ntp-server ${NTP_SERVER} \
                                                    --log-file ${HOME}/deploy.log \
-                                                   --libvirt-type ${VIRT_TYPE}
+                                                   --libvirt-type ${VIRT_TYPE} \
+                                                   --skip-nodes-and-networks
 }
 
 
@@ -388,6 +384,7 @@ function deploy-undercloud {
 function cloud-teardown {
   baremetal-unprovision
   openstack --os-cloud undercloud overcloud delete --yes "${STACK_NAME}"
+  openstack --os-cloud undercloud port list -f value | awk "/${STACK_NAME}/ {print \$1}"| xargs -n 1 openstack --os-cloud undercloud port delete
   openstack --os-cloud undercloud subnet list -f value | grep -v ctlplane | awk '{print $1}' | xargs -n 1 openstack subnet delete
   openstack --os-cloud undercloud network list -f value | grep -v ctlplane | awk '{print $1}' | xargs -n 1 openstack network delete
 }
