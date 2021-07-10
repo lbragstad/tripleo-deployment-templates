@@ -246,6 +246,15 @@ function build-overcloud-images {
 }
 
 
+function generate-roles {
+  cp -r /usr/share/openstack-tripleo-heat-templates/roles ${HOME}/tripleo-roles
+  openstack --os-cloud undercloud overcloud roles generate \
+            --output ${HOME}/overcloud-roles-data.yaml \
+            --roles-path ${HOME}/tripleo-roles \
+            $(openstack --os-cloud undercloud overcloud role list)
+}
+
+
 function network-provision {
   process-templates
   openstack --os-cloud undercloud overcloud network provision \
@@ -326,9 +335,13 @@ function deploy-overcloud {
                                                    --environment-file ${HOME}/overcloud-vip-deployed.yaml \
                                                    --environment-file ${HOME}/parameters.yaml \
                                                    --networks-file ${HOME}/net-data.yaml \
+                                                   --roles-file ${HOME}/overcloud-roles-data.yaml \
+                                                   --vip-file ${HOME}/network-vips.yaml \
+                                                   --baremetal-deployment ${HOME}/overcloud-baremetal-config.yaml \
                                                    --config-download-timeout 1024 \
                                                    --timeout 1024 \
                                                    --deployed-server \
+                                                   --network-config \
                                                    --disable-validations \
                                                    --validation-errors-nonfatal \
                                                    --ntp-server ${NTP_SERVER} \

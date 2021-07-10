@@ -35,8 +35,9 @@ $ pre-build
 $ deploy-undercloud
 $ get-overcloud-images
 $ network-provision
-$ baremetal-import; sleep 5
-$ baremetal-inspect; sleep 5
+$ generate-roles
+$ baremetal-import
+$ baremetal-inspect
 $ baremetal-provision
 $ deploy-overcloud
 $ post-deploy
