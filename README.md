@@ -34,8 +34,8 @@ an end to end TripleO deployment.
 $ pre-build
 $ deploy-undercloud
 $ get-overcloud-images
-$ network-provision
 $ generate-roles
+$ network-provision
 $ baremetal-import
 $ baremetal-inspect
 $ baremetal-provision
