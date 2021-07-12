@@ -54,10 +54,6 @@ parameter_defaults:
   ControllerNetworkConfigTemplate: /home/centos/dual-nic-multi-vlan.yaml.j2
   ControllerSchedulerHints:
     capabilities:node: overcloud-controller-%index%
-  DnsServers:
-  - 172.16.4.1
-  - 208.67.222.222
-  EnablePackageInstall: true
   GlanceCacheEnabled: true
   GlanceEnabledImportMethods: web-download,glance-direct
   GlanceNfsShare: 172.16.27.211:/mnt/storage/openstack/glance

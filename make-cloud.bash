@@ -341,8 +341,7 @@ function deploy-overcloud {
                                                    --validation-errors-nonfatal \
                                                    --ntp-server ${NTP_SERVER} \
                                                    --log-file ${HOME}/deploy.log \
-                                                   --libvirt-type ${VIRT_TYPE} \
-                                                   --skip-nodes-and-networks
+                                                   --libvirt-type ${VIRT_TYPE}
 }
 
 
