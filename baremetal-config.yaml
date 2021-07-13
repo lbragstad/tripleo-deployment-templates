@@ -16,6 +16,10 @@
       subnet: external_subnet
     - network: management
       subnet: management_subnet
+    config_drive:
+      cloud_config:
+        network:
+          config: disabled
     network_config:
       template: /home/centos/dual-nic-multi-vlan.yaml.j2
       default_route_network:
@@ -37,6 +41,10 @@
       subnet: external_subnet
     - network: management
       subnet: management_subnet
+    config_drive:
+      cloud_config:
+        network:
+          config: disabled
     network_config:
       template: /home/centos/dual-nic-multi-vlan.yaml.j2
       default_route_network:
