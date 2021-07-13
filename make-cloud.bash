@@ -259,7 +259,7 @@ function network-provision {
   process-templates
   openstack --os-cloud undercloud overcloud network provision \
                                                     --yes \
-                                                    --output ${HOME}/overcloud-networks-deplopyed.yaml \
+                                                    --output ${HOME}/overcloud-networks-deployed.yaml \
                                                     ${HOME}/net-data.yaml
   openstack --os-cloud undercloud overcloud network vip provision \
                                                         --yes \
@@ -294,7 +294,7 @@ function baremetal-provision {
             --stack ${STACK_NAME} \
             --network-config \
             --output ${HOME}/overcloud-baremetal-deployed.yaml \
-            ${HOME}/overcloud-baremetal-config.yaml
+            ${HOME}/baremetal-config.yaml
 }
 
 
@@ -331,7 +331,7 @@ function deploy-overcloud {
                                                    --environment-file ${THT}/environments/storage/glance-nfs.yaml \
                                                    --environment-file ${THT}/environments/storage/cinder-nfs.yaml \
                                                    --environment-file ${HOME}/overcloud-baremetal-deployed.yaml \
-                                                   --environment-file ${HOME}/overcloud-networks-deplopyed.yaml \
+                                                   --environment-file ${HOME}/overcloud-networks-deployed.yaml \
                                                    --environment-file ${HOME}/overcloud-vip-deployed.yaml \
                                                    --environment-file ${HOME}/parameters.yaml \
                                                    --roles-file ${HOME}/overcloud-roles-data.yaml \
