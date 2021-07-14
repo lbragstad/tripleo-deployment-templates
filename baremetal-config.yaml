@@ -14,8 +14,6 @@
       subnet: internal_api_subnet
     - network: external
       subnet: external_subnet
-    - network: management
-      subnet: management_subnet
     config_drive:
       cloud_config:
         network:
@@ -39,8 +37,6 @@
       subnet: internal_api_subnet
     - network: external
       subnet: external_subnet
-    - network: management
-      subnet: management_subnet
     config_drive:
       cloud_config:
         network:

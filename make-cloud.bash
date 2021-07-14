@@ -249,9 +249,10 @@ function build-overcloud-images {
 function generate-roles {
   cp -r /usr/share/openstack-tripleo-heat-templates/roles ${HOME}/tripleo-roles
   openstack --os-cloud undercloud overcloud roles generate \
-            --output ${HOME}/overcloud-roles-data.yaml \
+            --output ${HOME}/generated-roles-data.yaml \
             --roles-path ${HOME}/tripleo-roles \
             $(openstack --os-cloud undercloud overcloud role list)
+  echo -e "The generated roles data in [ ${HOME}/generated-roles-data.yaml ] needs to be customized before being used. When ready to deploy, rename the file [ roles-data.yaml ]."
 }
 
 
@@ -334,7 +335,7 @@ function deploy-overcloud {
                                                    --environment-file ${HOME}/overcloud-networks-deployed.yaml \
                                                    --environment-file ${HOME}/overcloud-vip-deployed.yaml \
                                                    --environment-file ${HOME}/parameters.yaml \
-                                                   --roles-file ${HOME}/overcloud-roles-data.yaml \
+                                                   --roles-file ${HOME}/roles-data.yaml \
                                                    --config-download-timeout 1024 \
                                                    --timeout 1024 \
                                                    --disable-validations \
