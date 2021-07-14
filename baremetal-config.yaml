@@ -4,16 +4,16 @@
   defaults:
     profile: compute
     networks:
-    - network: tenant
-      subnet: tenant_subnet
+    - network: external
+      subnet: external_subnet
+    - network: internal_api
+      subnet: internal_api_subnet
     - network: storage
       subnet: storage_subnet
     - network: storage_mgmt
       subnet: storage_mgmt_subnet
-    - network: internal_api
-      subnet: internal_api_subnet
-    - network: external
-      subnet: external_subnet
+    - network: tenant
+      subnet: tenant_subnet
     config_drive:
       cloud_config:
         network:
@@ -27,16 +27,16 @@
   defaults:
     profile: control
     networks:
-    - network: tenant
-      subnet: tenant_subnet
+    - network: external
+      subnet: external_subnet
+    - network: internal_api
+      subnet: internal_api_subnet
     - network: storage
       subnet: storage_subnet
     - network: storage_mgmt
       subnet: storage_mgmt_subnet
-    - network: internal_api
-      subnet: internal_api_subnet
-    - network: external
-      subnet: external_subnet
+    - network: tenant
+      subnet: tenant_subnet
     config_drive:
       cloud_config:
         network:
