@@ -1,4 +1,5 @@
 ---
+{% set public_dns = ["208.67.222.222", "8.8.8.8"] %}
 {#
   Loop through all networks and set the minimum viable MTU. Note that the minimum MTU is selected
   because the bridge interface will inheret the lowest MTU of all member interfaces.
@@ -27,7 +28,8 @@
   Loop through all role networks and create members
 #}
 {% for network in role_networks %}
-{%   set _ = nic2_members.append(
+{%   if (lookup('vars', networks_lower[network] ~ '_vlan_id') | int) != 1 %}
+{%     set _ = nic2_members.append(
        {
          "type": "vlan",
          "mtu": lookup('vars', networks_lower[network] ~ '_mtu') | int,
@@ -41,6 +43,7 @@
        }
      )
 %}
+{%   endif %}
 {% endfor %}
 {#
   Set the network configuration interfaces
@@ -50,7 +53,7 @@
       "type": "interface",
       "name": "nic1",
       "mtu": ctlplane_mtu,
-      "dns_servers": ctlplane_dns_nameservers,
+      "dns_servers": (ctlplane_dns_nameservers | length) > 0 | ternary(ctlplane_dns_nameservers, public_dns),
       "domain": dns_search_domains,
       "routes": ctlplane_host_routes,
       "use_dhcp": false,

@@ -55,8 +55,8 @@ parameter_defaults:
   ControllerSchedulerHints:
     capabilities:node: overcloud-controller-%index%
   DnsServers:
-  - 172.16.4.1
   - 208.67.222.222
+  - 8.8.8.8
   GlanceCacheEnabled: true
   GlanceEnabledImportMethods: web-download,glance-direct
   GlanceNfsShare: 172.16.27.211:/mnt/storage/openstack/glance
