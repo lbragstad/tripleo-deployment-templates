@@ -42,14 +42,13 @@ parameter_defaults:
   - excludes:
     - ceph
     - prometheus
-    push_destination: 192.168.4.101:8787
+    push_destination: true
     set:
       name_prefix: openstack
       name_suffix: ''
       namespace: docker.io/tripleomaster
       rhel_containers: 'false'
       tag: current-tripleo-rdo
-  ControlPlaneDefaultRoute: 192.168.4.101
   ControllerCount: 1
   ControllerNetworkConfigTemplate: /home/centos/dual-nic-multi-vlan.yaml.j2
   ControllerSchedulerHints:
