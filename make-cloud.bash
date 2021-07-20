@@ -398,7 +398,8 @@ function post-deploy {
   for NAME in ubuntu-focal-server-cloudimg-amd64-disk-kvm.img \
               ubuntu-bionic-server-cloudimg-amd64.img \
               Fedora-Cloud-Base-33-1.2.x86_64.qcow2 \
-              CentOS-8-x86_64-GenericCloud.qcow2 \
+              CentOS-8-stream-x86_64.qcow2 \
+              CentOS-Stream-GenericCloud-9.qcow2 \
               rhel-8-x86_64-kvm.qcow2; do
     openstack image create --disk-format qcow2 --container-format bare --public --file /mnt/images/${NAME} ${NAME}
     openstack image set --property hw_scsi_model=virtio-scsi \
