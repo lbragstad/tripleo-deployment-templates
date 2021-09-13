@@ -7,6 +7,7 @@ export VIRT_TYPE="${VIRT_TYPE:-$([ $(egrep -c '(vmx|svm)' /proc/cpuinfo) = 0 ] &
 export STACK_NAME="${STACK_NAME:-rk-openstack-0}"
 export NFS_SERVER="${NFS_SERVER:-172.16.27.211}"
 export TENANT_VLAN="${TENANT_VLAN:-204}"
+export BRIDGE="br-ctlplane"
 
 
 function tmux_execute {
@@ -177,6 +178,10 @@ parameter_defaults:
   NovaComputeLibvirtType: ${VIRT_TYPE}
 EOF
 
+}
+
+function setup-secure-rbac {
+       curl -o ${HOME}/enable-secure-rbac.yaml https://review.opendev.org/changes/openstack%2Ftripleo-heat-templates~781571/revisions/21/files/environments%2Fenable-secure-rbac.yaml/download
 }
 
 
@@ -359,6 +364,7 @@ function deploy-standalone {
                                 --environment-file /usr/share/openstack-tripleo-heat-templates/environments/standalone/standalone-tripleo.yaml \
                                 --environment-file ${HOME}/containers-prepare-parameters.yaml \
                                 --environment-file ${HOME}/standalone_parameters.yaml \
+                                --environment-file ${HOME}/enable-secure-rbac.yaml \
                                 --output-dir ${HOME} \
                                 --standalone \
                                 --stack ${STACK_NAME}
