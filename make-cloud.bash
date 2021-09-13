@@ -100,6 +100,7 @@ function setup-standalone-multi-nic {
     export NETMASK="${NETMASK:-24}"
     export INTERFACE="${INTERFACE:-eth1}"
     export MTU="$(cat /sys/class/net/${INTERFACE}/mtu)"
+    export BRIDGE="br-ctlplane"
 
     cat <<EOF > $HOME/standalone_parameters.yaml
 parameter_defaults:
@@ -139,6 +140,7 @@ function setup-standalone-single-nic {
     export NETMASK=$(echo ${CIDR} | awk -F'/' '{print $2}')
     export GATEWAY="$(ip -o r g 1 | awk '{print $3}')"
     export MTU="$(cat /sys/class/net/${INTERFACE}/mtu)"
+    export BRIDGE="br-ctlplane"
 
     sudo dd of=/etc/sysconfig/network-scripts/route-${BRIDGE} <<EOF
 default via ${GATEWAY} dev ${BRIDGE}
@@ -350,7 +352,6 @@ function deploy-standalone {
   openstack tripleo container image prepare default --output-env-file ${HOME}/containers-prepare-parameters.yaml
 
   export VIP="192.168.25.2"
-  export BRIDGE="br-ctlplane"
 
   sudo openstack tripleo deploy --templates \
                                 --local-ip=${IP}/${NETMASK} \
