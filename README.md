@@ -42,3 +42,14 @@ $ baremetal-provision
 $ deploy-overcloud
 $ post-deploy
 ```
+
+You can use the following functions to setup a standalone deployment:
+
+```shell
+$ pre-build
+$ setup-standalone-multi-nic
+$ deploy-standalone
+```
+
+Note that the standalone configuration assumes it can use eth1 for the required
+network bridge.
